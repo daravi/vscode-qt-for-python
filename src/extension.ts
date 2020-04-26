@@ -24,14 +24,14 @@ export function activate(context: vscode.ExtensionContext) {
     // This line of code will only be executed once when your extension is
     // activated.
 
-    outputChannel = vscode.window.createOutputChannel('Qt for Python')
+    outputChannel = vscode.window.createOutputChannel('Qt for C++')
 
     // The command has been defined in the package.json file
     // Now provide the implementation of the command with  registerCommand
     // The commandId parameter must match the command field in package.json
     context.subscriptions.push(vscode.commands.registerCommand(
-        'qtForPython.newForm', (fileUri: vscode.Uri) => {
-            const toolPath = vscode.workspace.getConfiguration('qtForPython.path').get<string>('designer')
+        'qtForCPP.newForm', (fileUri: vscode.Uri) => {
+            const toolPath = vscode.workspace.getConfiguration('qtForCPP.path').get<string>('designer')
             if (toolPath) {
                 if (fileUri) { // from explorer/context menus
                     exec(toolPath, { cwd: fileUri.fsPath })
@@ -41,17 +41,17 @@ export function activate(context: vscode.ExtensionContext) {
             } else { showPathNotExist('Qt Designer') }
         }))
     context.subscriptions.push(vscode.commands.registerCommand(
-        'qtForPython.editForm', (fileUri: vscode.Uri) => {
+        'qtForCPP.editForm', (fileUri: vscode.Uri) => {
             useTool('designer', 'Qt Design', fileUri)
         }))
     context.subscriptions.push(vscode.commands.registerCommand(
-        'qtForPython.compileForm', (fileUri: vscode.Uri) => {
+        'qtForCPP.compileForm', (fileUri: vscode.Uri) => {
             useTool('pyuic', 'Python UI Compiler', fileUri)
         }))
     context.subscriptions.push(vscode.commands.registerCommand(
-        'qtForPython.updateTranslation', async (fileUri: vscode.Uri) => {
+        'qtForCPP.updateTranslation', async (fileUri: vscode.Uri) => {
             vscode.window.showInformationMessage(`Trying to open Python lupdate Tool`)
-            let toolPath = vscode.workspace.getConfiguration('qtForPython.path').get<string>('pylupdate')
+            let toolPath = vscode.workspace.getConfiguration('qtForCPP.path').get<string>('pylupdate')
             if (toolPath) {
                 // Get -ts ts-files from toolPath.
                 const tsFileArgRegex = /\s+\-ts\s+\S+\b/g
@@ -83,19 +83,19 @@ export function activate(context: vscode.ExtensionContext) {
             } else { showPathNotExist('Python lupdate Tool') }
         }))
     context.subscriptions.push(vscode.commands.registerCommand(
-        'qtForPython.editTranslation', (fileUri: vscode.Uri) => {
+        'qtForCPP.editTranslation', (fileUri: vscode.Uri) => {
             useTool('linguist', 'Qt Linguist', fileUri)
         }))
     context.subscriptions.push(vscode.commands.registerCommand(
-        'qtForPython.releaseTranslation', (fileUri: vscode.Uri) => {
+        'qtForCPP.releaseTranslation', (fileUri: vscode.Uri) => {
             useTool('lrelease', 'Qt lrelease', fileUri)
         }))
     context.subscriptions.push(vscode.commands.registerCommand(
-        'qtForPython.previewQml', (fileUri: vscode.Uri) => {
+        'qtForCPP.previewQml', (fileUri: vscode.Uri) => {
             useTool('qmlscene', 'QML Scene', fileUri)
         }))
     context.subscriptions.push(vscode.commands.registerCommand(
-        'qtForPython.compileResource', (fileUri: vscode.Uri) => {
+        'qtForCPP.compileResource', (fileUri: vscode.Uri) => {
             useTool('pyrcc', 'Python Resource Compiler', fileUri)
         }))
 }
@@ -106,7 +106,7 @@ export function deactivate() {
 
 function useTool(id: string, name: string, targetUri: vscode.Uri) {
     vscode.window.showInformationMessage(`Trying to open ${name}`)
-    const toolPath = vscode.workspace.getConfiguration('qtForPython.path').get<string>(id)
+    const toolPath = vscode.workspace.getConfiguration('qtForCPP.path').get<string>(id)
     if (toolPath) {
         if (targetUri) { // from explorer/context menus
             exec(`${toolPath} "${targetUri.fsPath}"`)
@@ -122,7 +122,7 @@ function useTool(id: string, name: string, targetUri: vscode.Uri) {
 
 async function showPathNotExist(name: string) {
     const response = await vscode.window.showErrorMessage(
-        `${name} not found. Set the path of ${name} in Qt for Python section in`
+        `${name} not found. Set the path of ${name} in Qt for C++ section in`
         + 'the user setting.',
         'Setting'
     )
